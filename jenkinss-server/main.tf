@@ -5,7 +5,7 @@ module "vpc" {
   cidr = var.vpc_cidr
 
   azs                     = data.aws_availability_zones.azs.names
-  public_subnets          = var.public_subnets
+  private_subnets         = var.private_subnets
   enable_dns_hostnames    = true
   map_public_ip_on_launch = true
 
@@ -56,7 +56,7 @@ module "sg" {
 module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
-  name = "jenkins_server"
+  name = "webserver_server"
 
   instance_type               = var.instance_type
   key_name                    = "awsprofile-ci-key"
@@ -66,7 +66,7 @@ module "ec2_instance" {
   ami                         = data.aws_ami.example.id
   associate_public_ip_address = true
   availability_zone           = data.aws_availability_zones.azs.names[0]
-  user_data                   = file("jenkins-install.sh")
+  user_data                   = file("Tomcat-install.sh")
   tags = {
     name        = "jenkins-server"
     Terraform   = "true"
